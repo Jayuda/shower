@@ -606,6 +606,10 @@ window.shower = window.shower || (function(window, document, undefined) {
 		var i = shower.slideList.length - 1,
 			currentSlideId = url.hash.substr(1);
 
+        if (currentSlideId == '') {
+            return -1;
+        }
+
 		// As fast as you can ;-)
 		// http://jsperf.com/for-vs-foreach/46
 		for (; i >= 0; --i) {
@@ -614,7 +618,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 			}
 		}
 
-		return -1;
+		return 0;
 	};
 
 	/**
@@ -809,13 +813,25 @@ window.shower = window.shower || (function(window, document, undefined) {
 	// Event handlers
 
 	window.addEventListener('DOMContentLoaded', function() {
-		if (body.classList.contains('full') || shower.isSlideMode()) {
-			shower.go(shower.getCurrentSlideNumber());
+		var currentSlideNumber = shower.getCurrentSlideNumber(),
+			isSlideMode = body.classList.contains('full') || shower.isSlideMode();
+
+		if (currentSlideNumber ===  0 || isSlideMode) {
+			shower.go(currentSlideNumber);
+		}
+
+		if (isSlideMode) {
 			shower.enterSlideMode();
 		}
 	}, false);
 
 	window.addEventListener('popstate', function() {
+		var currentSlideNumber = shower.getCurrentSlideNumber();
+
+		if (currentSlideNumber !== -1) {
+			shower.go(currentSlideNumber);
+		}
+
 		if (shower.isListMode()) {
 			shower.enterListMode();
 		} else {
