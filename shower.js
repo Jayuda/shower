@@ -816,7 +816,9 @@ window.shower = window.shower || (function(window, document, undefined) {
 		var currentSlideNumber = shower.getCurrentSlideNumber(),
 			isSlideMode = body.classList.contains('full') || shower.isSlideMode();
 
-		if (currentSlideNumber ===  0 || isSlideMode) {
+		if (currentSlideNumber === -1 && isSlideMode) {
+			shower.go(0);
+		} else if (currentSlideNumber ===  0 || isSlideMode) {
 			shower.go(currentSlideNumber);
 		}
 
